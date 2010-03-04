@@ -1,0 +1,69 @@
+/*
+   Office world axioms for use with the abductive meta-interpreter
+   Parameterised abduction policy - usable for both planning
+   and perception
+*/
+
+/* Event calculus axioms */
+
+axiom(holds(F,T),[initially(F), not(clipped(0,F,T))]).
+
+axiom(holds(F,T2),
+     [happens(A,T1), before(T1,T2),
+     initiates(A,F,T1),
+     not(clipped(T1,F,T2))]).
+
+axiom(clipped(T1,F,T3),
+     [happens(A,T2),
+     terminates(A,F,T2),
+     before(T1,T2), before(T2,T3)]).
+
+/* Effect axioms */axiom(initiates(follow_wall,at_corner(C3,left),T),     [holds(beside_wall(C1,C2,left),T),     next_visible_corner(C1,C3,left,T)]).axiom(terminates(follow_wall,beside_wall(C1,C2,S),T),[]).axiom(next_visible_corner(C1,C2,left,T),     [next_corner(R,C1,C2), visible_corner(C2,T)]).axiom(next_visible_corner(C1,C3,left,T),     [next_corner(R,C1,C2), invisible_corner(C2,T),     next_visible_corner(C2,C3,left,T)]).
+
+axiom(visible_corner(C1,T),
+     [door(D,C1,C2),holds(door_open(D),T)]).
+
+axiom(visible_corner(C1,T),
+     [door(D,C2,C1),holds(door_open(D),T)]).
+
+axiom(visible_corner(C,T),[inner(C)]).axiom(invisible_corner(C1,T),     [door(D,C1,C2),holds(door_closed(D),T)]).axiom(invisible_corner(C1,T),     [door(D,C2,C1),holds(door_closed(D),T)]).axiom(initiates(go_straight,beside_wall(C2,C3,left),T),     [holds(at_corner(C1,left),T),     door(D,C1,C2), next_corner(R,C2,C3)]).axiom(terminates(go_straight,at_corner(C1,S),T),     [holds(at_corner(C1,left),T),door(D,C1,C2)]).axiom(initiates(turn(left),in_doorway(D,R),T),     [holds(at_corner(C1,left),T), door(D,C1,C2),     holds(door_open(D),T), next_corner(R,C1,C2)]).axiom(terminates(turn(left),at_corner(C1,left),T),     [holds(at_corner(C1,left),T), door(D,C1,C2),     holds(door_open(D),T)]).axiom(initiates(turn(left),beside_wall(C2,C3,left),T),     [holds(in_doorway(D,R1),T), connects(D,R1,R2),     door(D,C1,C2), next_corner(R2,C2,C3)]).axiom(terminates(turn(left),in_doorway(D,R),T),     [holds(in_doorway(D,R),T)]).axiom(initiates(turn(left),in(robot,R2),T),     [holds(in_doorway(D,R1),T), connects(D,R1,R2)]).axiom(terminates(turn(left),in(robot,R1),T),     [holds(in_doorway(D,R1),T)]).axiom(initiates(turn(right),beside_wall(C1,C2,left),T),     [holds(at_corner(C1,left),T), inner(C1), next_corner(R,C1,C2)]).axiom(terminates(turn(right),at_corner(C,left),T),     [holds(at_corner(C,left),T), inner(C)])./* Sensor events */axiom(happens(left_and_front,T),     [happens(follow_wall,T),     initiates(follow_wall,at_corner(C,S),T), inner(C)]).axiom(happens(left,T),     [happens(turn(right),T),     initiates(turn(right),beside_wall(C1,C2,S),T)]).axiom(happens(left,T),     [happens(turn(left),T),     initiates(turn(left),beside_wall(C1,C2,S),T)]).axiom(happens(left,T),     [happens(go_straight,T),     initiates(go_straight,beside_wall(C1,C2,S),T)]).axiom(happens(left_gap,T),     [happens(follow_wall,T),     initiates(follow_wall,at_corner(C1,S),T), door(D,C1,C2)]).
+axiom(happens(nothing,T),
+     [happens(turn(left),T),
+     initiates(turn(left),in_doorway(D,R),T)])./* External Actions */axiom(terminates(close_door(D),door_open(D),T),[]).axiom(initiates(open_door(D),door_open(D),T),[]).axiom(terminates(open_door(D),door_closed(D),T),[]).axiom(initiates(close_door(D),door_closed(D),T),[])./* Abduction policy */
+
+
+abducible(pln,happens(A,T)) :- executable(A), skolemise(T).
+
+abducible(pln,before(T1,T2)) :- skolemise(T1), skolemise(T2).abducible(pcv,happens(A,T)) :- extrinsic(A), skolemise(T).
+
+abducible(pcv,before(T1,T2)) :- skolemise(T1), skolemise(T2).
+
+
+executable(follow_wall).
+
+executable(go_straight).
+
+executable(turn(D)).
+
+
+extrinsic(close_door(D)).extrinsic(open_door(D))./* Initial Situation */axiom(initially(door_open(d1)),[]).axiom(initially(door_open(d2)),[]).axiom(initially(door_open(d3)),[]).axiom(initially(door_open(d4)),[]).axiom(initially(door_open(d5)),[]).axiom(initially(door_open(d6)),[]).axiom(initially(beside_wall(c8,c9,left)),[]).axiom(initially(in(robot,r2)),[])./* Room layout */axiom(next_corner(r1,c1,c2),[]).axiom(next_corner(r1,c2,c3),[]).axiom(next_corner(r1,c3,c4),[]).axiom(next_corner(r1,c4,c5),[]).axiom(next_corner(r1,c5,c6),[]).axiom(next_corner(r1,c6,c1),[]).axiom(door(d1,c3,c4),[]).axiom(inner(c1),[]).axiom(inner(c2),[]).axiom(inner(c5),[]).axiom(inner(c6),[]).axiom(next_corner(r2,c7,c8),[]).axiom(next_corner(r2,c8,c9),[]).axiom(next_corner(r2,c9,c10),[]).axiom(next_corner(r2,c10,c11),[]).axiom(next_corner(r2,c11,c12),[]).axiom(next_corner(r2,c12,c13),[]).axiom(next_corner(r2,c13,c14),[]).axiom(next_corner(r2,c14,c15),[]).axiom(next_corner(r2,c15,c16),[]).axiom(next_corner(r2,c16,c7),[]).axiom(door(d1,c15,c16),[]).axiom(door(d2,c9,c10),[]).axiom(door(d3,c12,c13),[]).axiom(inner(c7),[]).axiom(inner(c8),[]).axiom(inner(c11),[]).axiom(inner(c14),[]).axiom(next_corner(r3,c17,c18),[]).axiom(next_corner(r3,c18,c19),[]).axiom(next_corner(r3,c19,c20),[]).axiom(next_corner(r3,c20,c21),[]).axiom(next_corner(r3,c21,c22),[]).axiom(next_corner(r3,c22,c23),[]).axiom(next_corner(r3,c23,c24),[]).axiom(next_corner(r3,c24,c17),[]).axiom(door(d2,c23,c24),[]).axiom(door(d4,c20,c21),[]).axiom(inner(c17),[]).axiom(inner(c18),[]).axiom(inner(c19),[]).axiom(inner(c22),[]).axiom(next_corner(r4,c25,c26),[]).axiom(next_corner(r4,c26,c27),[]).axiom(next_corner(r4,c27,c28),[]).axiom(next_corner(r4,c28,c29),[]).axiom(next_corner(r4,c29,c30),[]).axiom(next_corner(r4,c30,c31),[]).axiom(next_corner(r4,c31,c32),[]).axiom(next_corner(r4,c32,c33),[]).axiom(next_corner(r4,c33,c34),[]).axiom(next_corner(r4,c34,c35),[]).axiom(next_corner(r4,c35,c36),[]).axiom(next_corner(r4,c36,c25),[]).axiom(door(d3,c26,c27),[]).axiom(door(d4,c28,c29),[]).axiom(door(d5,c34,c35),[]).axiom(door(d6,c32,c33),[]).axiom(inner(c25),[]).axiom(inner(c30),[]).axiom(inner(c31),[]).axiom(inner(c36),[]).axiom(next_corner(r5,c37,c38),[]).axiom(next_corner(r5,c38,c39),[]).axiom(next_corner(r5,c39,c40),[]).axiom(next_corner(r5,c40,c41),[]).axiom(next_corner(r5,c41,c42),[]).axiom(next_corner(r5,c42,c37),[]).axiom(door(d5,c38,c39),[]).axiom(inner(c37),[]).axiom(inner(c40),[]).axiom(inner(c41),[]).axiom(inner(c42),[]).axiom(next_corner(r6,c43,c44),[]).axiom(next_corner(r6,c44,c45),[]).axiom(next_corner(r6,c45,c46),[]).axiom(next_corner(r6,c46,c47),[]).axiom(next_corner(r6,c47,c48),[]).axiom(next_corner(r6,c48,c43),[]).axiom(door(d6,c44,c45),[]).axiom(inner(c43),[]).axiom(inner(c46),[]).axiom(inner(c47),[]).axiom(inner(c48),[]).axiom(connects(d1,r1,r2),[]).axiom(connects(d2,r3,r2),[]).axiom(connects(d3,r2,r4),[]).axiom(connects(d4,r3,r4),[]).axiom(connects(d5,r4,r5),[]).axiom(connects(d6,r4,r6),[]).axiom(connects(d1,r2,r1),[]).axiom(connects(d2,r2,r3),[]).axiom(connects(d3,r4,r2),[]).axiom(connects(d4,r4,r3),[]).axiom(connects(d5,r5,r4),[]).axiom(connects(d6,r6,r4),[]).
+
+
+/*
+   Sample queries:
+
+   abdemo_id(pcv,[happens(left_and_front,t)],
+      [happens(follow_wall,t)],R,[],N).
+
+   abdemo_id(pln,[holds(in(robot,r3),T)],[],R,[],N).
+
+   abdemo_id(pln,[holds(in(robot,r4),T)],[],R,[],N).
+
+   abdemo_id(pln,[holds(at_corner(c28,left),T)],[],R,[],N).
+
+   abdemo_id(pln,[holds(beside_wall(c29,c30,left),T)],[],R,[],N).
+
+   abdemo_id(pln,[holds(at_corner(c30,left),T)],[],R,[],N).
+
+   abdemo_id(pln,[holds(in(robot,r6),T)],[],R,[],N).
+*/

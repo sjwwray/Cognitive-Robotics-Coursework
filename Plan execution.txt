@@ -1,0 +1,126 @@
+/*
+  Code for linearising and executing partially ordered event calculus plans
+  that have been produced by the abductive meta-interpreter
+*/
+
+
+:- use_module(library(system)).
+
+
+/* Basic plan execution */
+
+
+execute_plan(R) :- linearise(R,P), execute_all(P).
+
+
+execute_all([]).
+
+execute_all([H|Hs]) :- execute_one(H), execute_all(Hs).
+
+
+execute_one(happens(A,T)) :-
+     write(A), nl, nl,
+     execute(A), sleep(3),
+     execute(stop), sleep(0.1).
+
+
+/* Comment out next clause if robot connected */
+
+execute(A).
+
+
+/* Linearisation */
+
+
+linearise(R1,[]) :- \+ pick_first(R1,H,R2,R1).
+
+linearise(R1,[H|Hs]) :- pick_first(R1,H,R2,R1), linearise(R2,Hs).
+
+
+pick_first([G|Gs1],H,[G|Gs2],R) :- G \= happens(A,T), !, pick_first(Gs1,H,Gs2,R).
+
+pick_first([H1|Gs],H1,Gs,R) :- \+ predecessor(H1,R,H2), !.
+
+pick_first([H1|Gs1],H2,[H1|Gs2],R) :- pick_first(Gs1,H2,Gs2,R).
+
+
+predecessor(happens(A1,T1),R,happens(A2,T2)) :-
+     member(happens(A2,T2),R), demo_before(T2,T1,R,[]).
+
+
+
+/* Interleaving planning, action, and perception */
+
+cycle(Gs) :-
+	initial_database(DB),
+	write('Initially: '), write(DB), nl, nl,
+	cycle(Gs,DB).
+
+cycle([],DB1).
+
+cycle([G|Gs],DB1) :-
+	write('Goals: '), write([G|Gs]), nl, nl,
+	write('Database: '), write(DB1), nl, nl,
+	abdemo_id(pln,[G],[],R1,[],Ns1,1,DB1),
+	write('Residue: '), write(R1), nl, nl,
+	innercycle([G|Gs],DB1,R1).
+
+innercycle([G|Gs],DB1,[]) :-
+	write('No plan for '), write(G),
+	write(', moving on to '), write(Gs),
+	nl, nl,
+	cycle(Gs,DB1).
+
+innercycle([G|Gs],DB1,[R|Rs]) :-
+	linearise([R|Rs],[H|Hs]),
+	write('Plan: '), write([H|Hs]), nl, nl,
+	execute_one(H),
+	get_sensor_event(E),
+	H = happens(A,T),
+	abdemo_id(_,[happens(E,T)],[H],R2,[],_,1,DB1),
+	write('What has happened: '), write(R2), nl, nl,
+	linearise(R2,R3),
+	write('Before progression: '), write(DB1), nl, nl,
+	write('Progressing with: '), write(R3), nl, nl,
+	progress(DB1,R3,DB2),
+	write('After progression: '), write(DB2), nl, nl,
+	cycle([G|Gs],DB2).
+
+
+progress(DB,[],DB).
+
+progress(DB1,[happens(A,T)|Hs],DB4) :-
+     findall(F,(axiom(initiates(A,F,T),Gs),provable(Gs,DB1)),AL),
+     findall(F,(axiom(terminates(A,F,T),Gs),provable(Gs,DB1)),DL),
+     delete_fluents(DB1,DL,DB2), append(AL,DB2,DB3),
+     progress(DB3,Hs,DB4).
+
+delete_fluents([],DL,[]).
+delete_fluents([F|Fs1],DL,Fs2) :-
+	member(F,DL), !, delete_fluents(Fs1,DL,Fs2).
+delete_fluents([F|Fs1],DL,[F|Fs2]) :- delete_fluents(Fs1,DL,Fs2).
+
+
+/*   The provable predicate is a simple meta-interpreter, which is used   to evaluate a list of goals with respect to the database of current   fluents DB.*/provable([],DB).provable([holds(F,T)|Gs],DB) :- !, member(F,DB), provable(Gs,DB).provable([diff(X,Y)|Gs],DB) :- !, X \= Y, provable(Gs,DB).provable([not(G)|Gs],DB) :-     !, \+ provable([G],DB), provable(Gs,DB).provable([G|Gs1],DB) :-     axiom(G,Gs2), provable(Gs2,DB), provable(Gs1,DB).
+
+
+get_sensor_event(E) :-
+     write('Enter sensor event: '), read(E), nl, nl.
+
+
+
+/* Example queries */
+
+tidy(X) :-
+     tcp_connect, sleep(1),
+     abdemo([holds(tidy(X),T)],[],R,[],N),
+     execute_plan(R).
+
+/*
+  :- tidy(blue).
+
+  :- cycle([holds(in(robot,r4),T)]).
+
+  :- cycle([holds(in(robot,r3),T)]).
+*/
+

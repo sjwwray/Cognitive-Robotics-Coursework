@@ -1,0 +1,143 @@
+/*
+   Simple abductive meta-interpreter with
+   event calculus axioms, as presented in
+   Cognitive Robotics course notes
+   Uses iterative deepening search strategy
+*/
+
+
+:- use_module(library(lists)).
+
+
+/* abdemo_id is an iterative deepening version of abdemo. */
+
+abdemo_id(Fg,Gs,R1,R2,N1,N2) :-
+     initial_database(DB), abdemo_id(Fg,Gs,R1,R2,N1,N2,1,DB).
+
+
+abdemo_id(Fg,Gs,R1,R2,N1,N2,D,DB) :-
+     write('Depth: '), write(D), nl, nl, abdemo(Fg,Gs,R1,R2,N1,N2,D,DB), !.
+
+abdemo_id(Fg,Gs,R1,R2,N1,N2,D1,DB) :-
+     D2 is D1+1, abdemo_id(Fg,Gs,R1,R2,N1,N2,D2,DB).
+
+
+abdemo(Fg,[],R,R,N,N,D,DB).
+/*
+abdemo(Fg,Gs,R1,R2,Ns1,Ns2,D,DB) :-
+     write(Gs), nl, nl,
+     write(R1), nl, nl,
+     write(Ns1), nl, nl,
+     read_line(C), nl, fail.
+*/
+/*
+abdemo(Fg,[holds(F,T)|Gs1],R1,R4,Ns1,Ns4,D,DB) :-
+     resolve(Fg,initially(F),R1,Gs2,R2,[]),
+     resolve(Fg,not(clipped(0,F,T)),R2,[],R2,Ns2),
+     append(Ns1,Ns2,Ns3),
+     abdemo_nafs(Ns3,R2,R3,DB),
+     append(Gs2,Gs1,Gs3),
+     abdemo(Fg,Gs3,R3,R4,Ns3,Ns4,D,DB).
+*/
+abdemo(Fg,[holds(F,T)|Gs1],R1,R3,Ns1,Ns4,D,DB) :-
+     member(F,DB),
+     resolve(Fg,not(clipped(0,F,T)),R1,[],R1,Ns2),
+     append(Ns1,Ns2,Ns3),
+     abdemo_nafs(Ns3,R1,R2,DB),
+     abdemo(Fg,Gs1,R2,R3,Ns3,Ns4,D,DB).
+
+abdemo(Fg,[holds(F,T2)|Gs1],R1,R5,Ns1,Ns4,D,DB) :-
+     !, resolve(Fg,initiates(A,F,T1),R1,Gs2,R1,[]),
+     resolve(Fg,happens(A,T1),R1,[],R2,[]),
+     check_depth(R2,D),
+     resolve(Fg,before(T1,T2),R2,[],R3,[]),
+     resolve(Fg,not(clipped(T1,F,T2)),R3,[],R3,Ns2),
+     append(Ns1,Ns2,Ns3),
+     abdemo_nafs(Ns3,R3,R4,DB),
+     append(Gs2,Gs1,Gs3),
+     abdemo(Fg,Gs3,R4,R5,Ns3,Ns4,D,DB).
+
+abdemo(Fg,[G1|Gs1],R1,R4,Ns1,Ns4,D,DB) :-
+     choose([G1|Gs1],G2,Gs2),
+     resolve(Fg,G2,R1,Gs3,R2,Ns2),
+     append(Ns1,Ns2,Ns3),
+     abdemo_nafs(Ns3,R2,R3,DB),
+     append(Gs3,Gs2,Gs4),
+     abdemo(Fg,Gs4,R3,R4,Ns3,Ns4,D,DB).
+
+choose([G|Gs],G,Gs).
+
+resolve(Fg,G,R,Gs,R,[]) :- axiom(G,Gs).
+resolve(Fg,G,R,[],R,[]) :- member(G,R).
+resolve(Fg,G,R,[],[G|R],[]) :-
+     abducible(Fg,G), consistent(G,R).
+resolve(Fg,not(G),R,[],R,[[G]]).
+
+consistent(before(X,Y),R) :-
+     !, X \= Y, \+ demo_before(Y,X,R,[]).
+consistent(G,R).
+
+demo_before(0,X,R,L) :- !.
+demo_before(X,Y,R,L) :-
+     member(before(X,Y),R), !.
+demo_before(X,Y,R,L) :- member(X,L).
+demo_before(X,Y,R,L) :-
+     member(before(X,Z),R),
+     demo_before(Z,Y,R,[X|L]).
+
+abdemo_nafs([],R,R,DB).
+abdemo_nafs([N|Ns1],R1,R3,DB) :-
+     abdemo_naf(N,R1,R2,DB),
+     abdemo_nafs(Ns1,R2,R3,DB).
+
+abdemo_naf([before(X,Y)|Gs],R,R,DB) :- X == Y, !.
+abdemo_naf([before(X,Y)|Gs],R,R,DB) :-
+     demo_before(Y,X,R,[]), !.
+abdemo_naf([before(X,Y)|Gs],R,[before(Y,X)|R],DB) :-
+     \+ demo_before(X,Y,R,[]).
+abdemo_naf([before(X,Y)|Gs],R1,R2,DB) :-
+     !, abdemo_naf(Gs,R1,R2,DB).
+abdemo_naf([not(G)|Gs],R,R,DB) :-
+     abdemo(Fg,[G],R,R,N,N,100,DB), !.
+abdemo_naf([not(G)|Gs],R1,R2,DB) :-
+     !, abdemo_naf(Gs,R1,R2,DB).
+abdemo_naf([G|Gs1],R,R,DB) :-
+     \+ resolve2(G,R,Gs2,R,Ns), !.
+abdemo_naf([G1|Gs1],R1,R2,DB) :-
+     findall(Gs3,
+          (resolve2(G1,R1,Gs2,R1,Ns),
+          append(Gs1,Gs2,Gs3)),Gss),
+     abdemo_nafs(Gss,R1,R2,DB).
+
+resolve2(G,R,Gs,R,[]) :- axiom(G,Gs).
+resolve2(G,R,[],R,[]) :- member(G,R).
+
+
+check_depth(R,D) :- action_count(R,N), N =< D.
+
+
+action_count([],0).
+action_count([happens(A,T)|R],N) :- !, action_count(R,M), N is M+1.
+action_count([L|R],N) :- action_count(R,N).
+
+
+initial_database(DB) :- findall(F,axiom(initially(F),[]),DB).
+
+
+
+/* Utilities */
+
+skolemise(T) :- var(T), gensym(t,T), !.
+skolemise(T).
+
+gensym(Root,Atom) :-
+     get_num(Root,Num), name(Root,Name1), name(Num,Name2),
+     append(Name1,Name2,Name), name(Atom,Name).
+
+get_num(Root,Num) :-
+     retract(current_num(Root,Num1)), !, Num is Num1 + 1,
+     asserta(current_num(Root,Num)).
+
+get_num(Root,1) :- asserta(current_num(Root,1)).
+
+init_gensym(Root) :- asserta(current_num(Root,1)).
