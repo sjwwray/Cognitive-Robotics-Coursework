@@ -18,44 +18,29 @@ axiom(clipped(T1,F,T3),
      terminates(A,F,T2),
      before(T1,T2), before(T2,T3)]).
 
-/*
-axiom(see(X),[holds(facing(Y),T1),holds(loc(X,Y),T1)]) :- write( 'Axiom see(x) general: ' ), write( [holds(facing(Y),T1),holds(loc(X,Y),T1)] ), nl, nl.
+axiom(happens(see(X),T1),
+	[happens(seek_left,T1),holds(facing(Y),T1),
+	holds(facing(Z),T2),holds(next_left(Z,Y),T2),
+	before(T1,T2)]).
 
-axiom(see(X),[happens(seek_left,T1),holds(facing(Y),T1),holds(next_left(Y2,Y),T1),holds(loc(X,Y2),T1)]) :-
-	write('Axiom see(x), seek_left'), nl, nl.
-
-axiom(see(X),[happens(seek_right,T1),holds(facing(Y),T1),holds(next_left(Y,Y2),T1),holds(loc(X,Y2),T1)]) :-
-	write('Axiom see(x), seek_right'), nl, nl.
-
-axiom(initialise(F),[holds(F,T1)]) :-
-	write('Initialise(F)'), nl, nl.
-
-*/
-/* Fluents examples */
-/*
-got(X) - means the same as beforehand - the robot has object X in its gripper
-
-at(X) - means the robot is at location X
-
-loc(X,Y) - means object X is at location Y
-
-facing(X) - means the robot is facing location X (note: not object X)
-*/
+axiom(happens(see(X),T1),
+	[happens(seek_right,T1),holds(facing(Y),T1),
+	holds(facing(Z),T2),holds(next_left(Y,Z),T1),
+	before(T1,T2)]).
 
 
 /* Effect axioms */
 
-axiom(initiates(see(X),knowcol(X),T),[holds(loc(X,Y),T)]).
+axiom(initiates(seek_left,knowcol(X),T),[holds(loc(X,Y),T)]).
 
-/*
-axiom(initiates(initialise(see(X)),loc(X,Y),T),[holds(facing(Y),T)]) :- write( '>> initialiiiiiiiisa' ), nl, nl.
-*/
+axiom(initiates(seek_right,knowcol(X),T),[holds(loc(X,Y),T)]).
 
-axiom(initiates(initialise(F),holds(F,T),T)) :- write( 'init: ' ), write( [F, T] ), nl, nl.
+axiom(initiates(see(X),loc(X,Y),T2),[holds(facing(Y),T2),happens(seek_left,T1),before(T1,T2)]).
+
+axiom(initiates(see(X),loc(X,Y),T2),[holds(facing(Y),T2),happens(seek_right,T1),before(T1,T2)]).
 
 axiom(initiates(approach,at(X),T),[holds(facing(X),T)]).
 
-axiom(initiates(seek_left,loc(X,Y),T),[initialise(see(X)),holds(facing(Y),T)]) :- write( '>> spoo ' ), write( [see(X),holds(facing(Y),T)] ), nl, nl.
 axiom(initiates(seek_left,facing(X),T),[holds(facing(Y),T),next_left(X,Y)]).
 
 axiom(initiates(seek_right,facing(X),T),[holds(facing(Y),T),next_left(Y,X)]).
@@ -74,36 +59,6 @@ axiom(terminates(pickup,loc(X,Y),T),[holds(at(Y),T)]).
 
 axiom(terminates(putdown,got(X),T),[]).
 
-/* Old effect axioms */
-/*
-axiom(initiates(forwards,at_edge,T),[]).
-
-axiom(initiates(approach,in_front(X),T),[holds(visible(X),T)]).
-
-axiom(initiates(seek_left,visible(X),T),
-     [holds(visible(Y),T),next_left(X,Y)]).
-
-axiom(initiates(seek_right,visible(X),T),
-     [holds(visible(Y),T),next_left(Y,X)]).
-
-axiom(initiates(pickup,got(X),T),[holds(in_front(X),T)]).
-
-axiom(initiates(putdown,tidy(X),T),[holds(got(X),T),holds(at_edge,T)]).
-
-axiom(terminates(forwards,in_front(X),T),[]).
-
-axiom(terminates(approach,at_edge,T),[]).
-
-axiom(terminates(seek_right,visible(X),T),[]).
-
-axiom(terminates(seek_left,visible(X),T),[]).
-
-axiom(terminates(pickup,visible(X),T),[]).
-
-axiom(terminates(pickup,in_front(X),T),[]).
-
-axiom(terminates(putdown,got(X),T),[]).
-*/
 
 /* Initial situation */
 
@@ -117,21 +72,10 @@ axiom(initially(facing(b)),[]).
 
 /*
 axiom(initially(loc(blue,a)),[]).
-
+ 
 axiom(initially(loc(green,b)),[]).
 
 axiom(initially(loc(red,c)),[]).
-*/
-
-/* Old initial situation */
-/*
-axiom(next_left(blue,green),[]).
-
-axiom(next_left(green,red),[]).
-
-axiom(next_left(red,blue),[]).
-
-axiom(initially(visible(green)),[]).
 */
 
 axiom(eq(X,X),[]).
@@ -139,18 +83,13 @@ axiom(eq(X,X),[]).
 
 /* Abduction policy */
 
-abducible(_, happens(A,T)) :- skolemise(T).
-abducible(_, before(T1,T2)) :-
-     skolemise(T1), skolemise(T2).
-
-abducible(_, initialise(F)) :- write( '>> abduce initialise' ), nl, nl.
-/*abducible(_, see(F)) :- write( '>> abduce see' ), nl, nl.
-*/
-
 /*
-   Sample queries:
-   abdemo([holds(visible(blue),T)],[],R,[],N).
-   abdemo([holds(in_front(blue),T)],[],R,[],N).
-   abdemo([holds(tidy(blue),T)],[],R,[],N).
+abducible(_,happens(initialise(see(X)),T)) :-
+	abducible(_,happens(seek_left,T)).
 */
 
+abducible(_,happens(A,T)) :-
+	skolemise(T).
+
+abducible(_,before(T1,T2)) :-
+	skolemise(T1), skolemise(T2).
