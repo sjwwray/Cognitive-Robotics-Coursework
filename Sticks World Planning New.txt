@@ -13,7 +13,7 @@ axiom(clipped(T1,F,T3),
 /* Sensor events */
 
 axiom(happens(see(X),T1),
-	[happens(seek_left,T1), holds(facing(Y),T2), initiates(initialise,loc(X,Y),T2), before(T1,T2)]) :- write( [seek_left, X, Y, T1, T2] ), nl.
+	[happens(seek_left,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]) :- write( [seek_left, X, Y, T1, T2] ), nl.
 
 axiom(happens(see(X),T),
 	[happens(seek_right,T), holds(facing(Y),T), initiates(seek_right,loc(X,Y),T)]).
@@ -34,7 +34,7 @@ axiom(happens(nothing,T),
 axiom(initiates(initiates,F,T),[]).
 */
 
-axiom(initiates(initialise,loc(X,Y),T),[]) :- write( [loc(X,Y)] ), nl.
+axiom(initiates(initialise(loc(X,Y)),loc(X,Y),T),[]) :- write( [loc(X,Y)] ), nl.
 
 axiom(initiates(seek_left,knowcol(Y),T),[holds(loc(X,Y),T),holds(facing(Y),T)]).
 
@@ -98,8 +98,6 @@ abducible(_,happens(see(X),T)) :-
 	skolemise(T).
 */
 
+abducible(_,initialise).
 abducible(_,holds(loc(X,Y),T)) :- skolemise(T).
 
-/*
-abducible(_,loc(X,Y),T) :- skolemise(T).
-*/
