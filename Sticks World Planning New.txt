@@ -1,43 +1,42 @@
-/*
-   Sticks World axioms for use with abductive meta-interpreter
-   Planning version - initial situation known, plan abducible
-*/
-
-
 /* Event calculus axioms */
 
 axiom(holds(F,T2),
-     [happens(A,T1), before(T1,T2),
-     initiates(A,F,T1),
-     not(clipped(T1,F,T2))]).
+	[happens(A,T1), before(T1,T2), initiates(A,F,T1), not(clipped(T1,F,T2))]).
 
-axiom(holds(F,T),[initially(F), not(clipped(0,F,T))]).
+axiom(holds(F,T),
+	[initially(F), not(clipped(0,F,T))]).
 
 axiom(clipped(T1,F,T3),
-     [happens(A,T2),
-     terminates(A,F,T2),
-     before(T1,T2), before(T2,T3)]).
+	[happens(A,T2), terminates(A,F,T2), before(T1,T2), before(T2,T3)]).
 
-axiom(happens(see(X),T1),
-	[happens(seek_left,T1),holds(facing(Y),T1),
-	holds(facing(Z),T2),holds(next_left(Z,Y),T2),
-	before(T1,T2)]).
 
-axiom(happens(see(X),T1),
-	[happens(seek_right,T1),holds(facing(Y),T1),
-	holds(facing(Z),T2),holds(next_left(Y,Z),T1),
-	before(T1,T2)]).
+/* Sensor events */
+
+axiom(happens(see(X),T),
+	[happens(seek_left,T)]).
+
+axiom(happens(see(X),T),
+	[happens(seek_right,T)]).
+
+axiom(happens(nothing,T),
+	[happens(approach,T)]).
+
+axiom(happens(nothing,T),
+        [happens(pickup,T)]).
+
+axiom(happens(nothing,T),
+        [happens(putdown,T)]).
 
 
 /* Effect axioms */
 
-axiom(initiates(seek_left,knowcol(X),T),[holds(loc(X,Y),T)]).
+axiom(initiates(seek_left,loc(X,Y),T),[holds(facing(Y),T),happens(see(X),T)]).
 
-axiom(initiates(seek_right,knowcol(X),T),[holds(loc(X,Y),T)]).
+axiom(initiates(seek_right,loc(X,Y),T),[holds(facing(Y),T),happens(see(X),T)]).
 
-axiom(initiates(see(X),loc(X,Y),T2),[holds(facing(Y),T2),happens(seek_left,T1),before(T1,T2)]).
+axiom(initiates(seek_left,knowcol(Y),T),[holds(loc(X,Y),T),holds(facing(Y),T)]).
 
-axiom(initiates(see(X),loc(X,Y),T2),[holds(facing(Y),T2),happens(seek_right,T1),before(T1,T2)]).
+axiom(initiates(seek_right,knowcol(Y),T),[holds(loc(X,Y),T),holds(facing(Y),T)]).
 
 axiom(initiates(approach,at(X),T),[holds(facing(X),T)]).
 
@@ -83,13 +82,13 @@ axiom(eq(X,X),[]).
 
 /* Abduction policy */
 
-/*
-abducible(_,happens(initialise(see(X)),T)) :-
-	abducible(_,happens(seek_left,T)).
-*/
-
 abducible(_,happens(A,T)) :-
 	skolemise(T).
 
 abducible(_,before(T1,T2)) :-
 	skolemise(T1), skolemise(T2).
+
+
+/* Abduction policy for perception */
+
+abducible(_,happens(see(X),T)) :- skolemise(T), write('>>> See happens: '), write(X), write(', at: '), write(T), nl, nl.
