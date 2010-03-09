@@ -16,7 +16,7 @@ axiom(happens(see(X),T1),
 	[happens(seek_left,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]).
 
 axiom(happens(see(X),T1),
-	[happens(seek_right,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]]).
+	[happens(seek_right,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]).
 
 axiom(happens(nothing,T),
 	[happens(approach,T)]).
@@ -32,9 +32,9 @@ axiom(happens(nothing,T),
 
 axiom(initiates(initialise(loc(X,Y)),loc(X,Y),T),[]).
 
-axiom(initiates(seek_left,knowcol(Y),T),[holds(loc(X,Y),T),holds(facing(Y),T)]).
+axiom(initiates(seek_left,knowcol(Z,T),[holds(facing(Y),T),next_left(Z,Y)]).
 
-axiom(initiates(seek_right,knowcol(Y),T),[holds(loc(X,Y),T),holds(facing(Y),T)]).
+axiom(initiates(seek_right,knowcol(Z),T),[holds(facing(Y),T),next_left(Y,Z)]).
 
 axiom(initiates(approach,at(X),T),[holds(facing(X),T)]).
 
