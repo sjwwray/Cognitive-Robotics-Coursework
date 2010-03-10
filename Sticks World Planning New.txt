@@ -30,7 +30,7 @@ axiom(happens(nothing,T),
 
 /* Effect axioms */
 
-axiom(initiates(initialise(loc(X,Y)),loc(X,Y),T),[]).
+axiom(initiates(initialise(F),F,T),[]).
 
 axiom(initiates(seek_left,knowcol(Z),T),[holds(facing(Y),T),next_left(Z,Y)]).
 
@@ -67,27 +67,18 @@ axiom(next_left(c,a),[]).
 
 axiom(initially(facing(b)),[]).
 
-/*
-axiom(initially(loc(blue,a)),[]).
- 
-axiom(initially(loc(green,b)),[]).
-
-axiom(initially(loc(red,c)),[]).
-*/
-
 axiom(eq(X,X),[]).
 
 
 /* Abduction policy */
 
-abducible(_,happens(A,T)) :-
-	skolemise(T).
+abducible(pln,happens(approach,T)) :- skolemise(T).
+abducible(pln,happens(seek_left,T)) :- skolemise(T).
+abducible(pln,happens(seek_right,T)) :- skolemise(T).
+abducible(pln,happens(pickup,T)) :- skolemise(T).
+abducible(pln,happens(putdown,T)) :- skolemise(T).
 
 abducible(_,before(T1,T2)) :-
 	skolemise(T1), skolemise(T2).
 
-
-/* Abduction policy for perception */
-
-abducible(_,initialise).
-
+abducible(pcv,happens(A,T)) :- skolemise(T).

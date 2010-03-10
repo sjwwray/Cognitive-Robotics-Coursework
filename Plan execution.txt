@@ -78,7 +78,7 @@ innercycle([G|Gs],DB1,[R|Rs]) :-
 	get_sensor_event(E),
 	H = happens(A,T),
 	write('Happened: '), write([E,A,T]), nl, nl,
-	abdemo_id(_,[happens(E,T)],[H],R2,[],_,1,DB1),
+	abdemo_id(pcv,[happens(E,T)],[H],R2,[],_,1,DB1),
 	write('What has happened: '), write(R2), nl, nl,
 	linearise(R2,R3),
 	write('Before progression: '), write(DB1), nl, nl,
