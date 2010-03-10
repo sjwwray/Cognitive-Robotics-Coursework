@@ -32,7 +32,7 @@ axiom(happens(nothing,T),
 
 axiom(initiates(initialise(loc(X,Y)),loc(X,Y),T),[]).
 
-axiom(initiates(seek_left,knowcol(Z,T),[holds(facing(Y),T),next_left(Z,Y)]).
+axiom(initiates(seek_left,knowcol(Z),T),[holds(facing(Y),T),next_left(Z,Y)]).
 
 axiom(initiates(seek_right,knowcol(Z),T),[holds(facing(Y),T),next_left(Y,Z)]).
 
