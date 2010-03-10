@@ -1,0 +1,759 @@
+/*
+        Group members:
+                Peter Coetzee (plc06@doc.ic.ac.uk)
+                Oroma Oyewole (oo306@doc.ic.ac.uk)
+                Stephen Wray (sjw06@doc.ic.ac.uk)
+*/
+
+/* Query 1 */
+
+cycle([holds(at(a),T)]).
+
+/* Response 1 */
+
+Initially: [facing(b)]
+
+Goals: [holds(at(a), _G183)]
+
+Database: [facing(b)]
+
+Depth: 1
+
+Depth: 2
+
+Residue: [before(t7, t5), happens(seek_left, t7), before(t5, t6), happens(approach, t5)]
+
+Plan: [happens(seek_left, t7), happens(approach, t5)]
+
+seek_left
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_left, t7]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, a)), t10), before(t7, t10), happens(seek_left, t7)]
+
+Before progression: [facing(b)]
+
+Progressing with: [happens(seek_left, t7), happens(initialise(loc(blue, a)), t10)]
+
+After progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Goals: [holds(at(a), t6)]
+
+Database: [loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: [before(t11, t6), happens(approach, t11)]
+
+Plan: [happens(approach, t11)]
+
+approach
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, approach, t11]
+
+Depth: 1
+
+What has happened: [happens(approach, t11)]
+
+Before progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Progressing with: [happens(approach, t11)]
+
+After progression: [at(a), loc(blue, a), knowcol(a), facing(a)]
+
+Goals: [holds(at(a), t6)]
+
+Database: [at(a), loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(at(a), t6), moving on to []
+
+T = t6 
+
+
+/* Query 2 */
+
+cycle([holds(knowcol(a),T), holds(knowcol(b),T), holds(knowcol(c),T), holds(got(blue),T)]).
+
+/* Response 2 */
+
+Initially: [facing(b)]
+
+Goals: [holds(knowcol(a), _G183), holds(knowcol(b), _G183), holds(knowcol(c), _G183), holds(got(blue), _G183)]
+
+Database: [facing(b)]
+
+Depth: 1
+
+Residue: [before(t14, t15), happens(seek_left, t14)]
+
+Plan: [happens(seek_left, t14)]
+
+seek_left
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_left, t14]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, a)), t18), before(t14, t18), happens(seek_left, t14)]
+
+Before progression: [facing(b)]
+
+Progressing with: [happens(seek_left, t14), happens(initialise(loc(blue, a)), t18)]
+
+After progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Goals: [holds(knowcol(a), t15), holds(knowcol(b), t15), holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Database: [loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(a), t15), moving on to [holds(knowcol(b), t15), holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Goals: [holds(knowcol(b), t15), holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Database: [loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: [before(t22, t15), happens(seek_right, t22)]
+
+Plan: [happens(seek_right, t22)]
+
+seek_right
+
+Enter sens.r event: see(green)
+
+
+Happened: [see(green), seek_right, t22]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(green, b)), t30), before(t22, t30), happens(seek_right, t22)]
+
+Before progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Progressing with: [happens(seek_right, t22), happens(initialise(loc(green, b)), t30)]
+
+After progression: [loc(green, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(knowcol(b), t15), holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Database: [loc(green, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(b), t15), moving on to [holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Goals: [holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Database: [loc(green, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: [before(t34, t15), happens(seek_right, t34)]
+
+Plan: [happens(seek_right, t34)]
+
+seek_right
+
+Enter se.sor event: see(red)
+
+
+Happened: [see(red), seek_right, t34]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(red, c)), t42), before(t34, t42), happens(seek_right, t34)]
+
+Before progression: [loc(green, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Progressing with: [happens(seek_right, t34), happens(initialise(loc(red, c)), t42)]
+
+After progression: [loc(red, c), knowcol(c), facing(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(knowcol(c), t15), holds(got(blue), t15)]
+
+Database: [loc(red, c), knowcol(c), facing(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(c), t15), moving on to [holds(got(blue), t15)]
+
+Goals: [holds(got(blue), t15)]
+
+Database: [loc(red, c), knowcol(c), facing(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Depth: 3
+
+Residue: [before(t57, t53), happens(seek_right, t57), before(t53, t52), happens(approach, t53), before(t52, t15), happens(pickup, t52)]
+
+Plan: [happens(seek_right, t57), happens(approach, t53), happens(pickup, t52)]
+
+seek_right
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_right, t57]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, a)), t65), before(t57, t65), happens(seek_right, t57)]
+
+Before progression: [loc(red, c), knowcol(c), facing(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Progressing with: [happens(seek_right, t57), happens(initialise(loc(blue, a)), t65)]
+
+After progression: [loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(got(blue), t15)]
+
+Database: [loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Residue: [before(t71, t70), happens(approach, t71), before(t70, t15), happens(pickup, t70)]
+
+Plan: [happens(approach, t71), happens(pickup, t70)]
+
+approach
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, approach, t71]
+
+Depth: 1
+
+What has happened: [happens(approach, t71)]
+
+Before progression: [loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Progressing with: [happens(approach, t71)]
+
+After progression: [at(a), loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(got(blue), t15)]
+
+Database: [at(a), loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: [before(t72, t15), happens(pickup, t72)]
+
+Plan: [happens(pickup, t72)]
+
+pickup
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, pickup, t72]
+
+Depth: 1
+
+What has happened: [happens(approach, t72), happens(pickup, t72)]
+
+Before progression: [at(a), loc(blue, a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Progressing with: [happens(approach, t72), happens(pickup, t72)]
+
+After progression: [got(blue), got(blue), at(a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), knowcol(a)]
+
+Goals: [holds(got(blue), t15)]
+
+Database: [got(blue), got(blue), at(a), knowcol(a), facing(a), loc(red, c), knowcol(c), loc(green, b), knowcol(b), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(got(blue), t15), moving on to []
+
+T = t15 
+
+
+
+/* Query 3 - blue at a */
+
+cycle([holds(knowcol(a),T), holds(knowcol(b),T), holds(knowcol(c),T), holds(loc(blue,a),T)]).
+
+/* Response 3 */
+
+Initially: [facing(b)]
+
+Goals: [holds(knowcol(a), _G183), holds(knowcol(b), _G183), holds(knowcol(c), _G183), holds(loc(blue, a), _G183)]
+
+Database: [facing(b)]
+
+Depth: 1
+
+Residue: [before(t73, t74), happens(seek_left, t73)]
+
+Plan: [happens(seek_left, t73)]
+
+seek_left
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_left, t73]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, a)), t77), before(t73, t77), happens(seek_left, t73)]
+
+Before progression: [facing(b)]
+
+Progressing with: [happens(seek_left, t73), happens(initialise(loc(blue, a)), t77)]
+
+After progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Goals: [holds(knowcol(a), t74), holds(knowcol(b), t74), holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Database: [loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(a), t74), moving on to [holds(knowcol(b), t74), holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Goals: [holds(knowcol(b), t74), holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Database: [loc(blue, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: [before(t81, t74), happens(seek_right, t81)]
+
+Plan: [happens(seek_right, t81)]
+
+seek_right
+
+Enter se.sor event: see(red)
+
+
+Happened: [see(red), seek_right, t81]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(red, b)), t89), before(t81, t89), happens(seek_right, t81)]
+
+Before progression: [loc(blue, a), knowcol(a), facing(a)]
+
+Progressing with: [happens(seek_right, t81), happens(initialise(loc(red, b)), t89)]
+
+After progression: [loc(red, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(knowcol(b), t74), holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Database: [loc(red, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(b), t74), moving on to [holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Goals: [holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Database: [loc(red, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: [before(t93, t74), happens(seek_right, t93)]
+
+Plan: [happens(seek_right, t93)]
+
+seek_right
+
+Enter sens.r event: see(green)
+
+
+Happened: [see(green), seek_right, t93]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(green, c)), t101), before(t93, t101), happens(seek_right, t93)]
+
+Before progression: [loc(red, b), knowcol(b), facing(b), loc(blue, a), knowcol(a)]
+
+Progressing with: [happens(seek_right, t93), happens(initialise(loc(green, c)), t101)]
+
+After progression: [loc(green, c), knowcol(c), facing(c), loc(red, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Goals: [holds(knowcol(c), t74), holds(loc(blue, a), t74)]
+
+Database: [loc(green, c), knowcol(c), facing(c), loc(red, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(c), t74), moving on to [holds(loc(blue, a), t74)]
+
+Goals: [holds(loc(blue, a), t74)]
+
+Database: [loc(green, c), knowcol(c), facing(c), loc(red, b), knowcol(b), loc(blue, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(loc(blue, a), t74), moving on to []
+
+T = t74
+
+
+
+/* Query 4 - blue not at a */
+
+cycle([holds(knowcol(a),T), holds(knowcol(b),T), holds(knowcol(c),T), holds(loc(blue,a),T)]).
+
+/* Response 4 */
+
+Initially: [facing(b)]
+
+Goals: [holds(knowcol(a), _G183), holds(knowcol(b), _G183), holds(knowcol(c), _G183), holds(loc(blue, a), _G183)]
+
+Database: [facing(b)]
+
+Depth: 1
+
+Residue: [before(t102, t103), happens(seek_left, t102)]
+
+Plan: [happens(seek_left, t102)]
+
+seek_left
+
+Enter se.sor event: see(red)
+
+
+Happened: [see(red), seek_left, t102]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(red, a)), t106), before(t102, t106), happens(seek_left, t102)]
+
+Before progression: [facing(b)]
+
+Progressing with: [happens(seek_left, t102), happens(initialise(loc(red, a)), t106)]
+
+After progression: [loc(red, a), knowcol(a), facing(a)]
+
+Goals: [holds(knowcol(a), t103), holds(knowcol(b), t103), holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Database: [loc(red, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(a), t103), moving on to [holds(knowcol(b), t103), holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Goals: [holds(knowcol(b), t103), holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Database: [loc(red, a), knowcol(a), facing(a)]
+
+Depth: 1
+
+Residue: [before(t110, t103), happens(seek_right, t110)]
+
+Plan: [happens(seek_right, t110)]
+
+seek_right
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_right, t110]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, b)), t118), before(t110, t118), happens(seek_right, t110)]
+
+Before progression: [loc(red, a), knowcol(a), facing(a)]
+
+Progressing with: [happens(seek_right, t110), happens(initialise(loc(blue, b)), t118)]
+
+After progression: [loc(blue, b), knowcol(b), facing(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(knowcol(b), t103), holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Database: [loc(blue, b), knowcol(b), facing(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(b), t103), moving on to [holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Goals: [holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Database: [loc(blue, b), knowcol(b), facing(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Residue: [before(t122, t103), happens(seek_right, t122)]
+
+Plan: [happens(seek_right, t122)]
+
+seek_right
+
+Enter sens.r event: see(green)
+
+
+Happened: [see(green), seek_right, t122]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(green, c)), t130), before(t122, t130), happens(seek_right, t122)]
+
+Before progression: [loc(blue, b), knowcol(b), facing(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(seek_right, t122), happens(initialise(loc(green, c)), t130)]
+
+After progression: [loc(green, c), knowcol(c), facing(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(knowcol(c), t103), holds(loc(blue, a), t103)]
+
+Database: [loc(green, c), knowcol(c), facing(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(knowcol(c), t103), moving on to [holds(loc(blue, a), t103)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [loc(green, c), knowcol(c), facing(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Depth: 3
+
+Depth: 4
+
+Depth: 5
+
+Depth: 6
+
+Residue: [before(t265, t248), before(t249, t265), before(t250, t247), before(t265, t247), before(t265, t250), happens(approach, t265), before(t250, t246), happens(pickup, t250), before(t249, t248), happens(seek_left, t249), before(t248, t247), happens(seek_left, t248), before(t247, t246), happens(approach, t247), before(t246, t103), happens(putdown, t246)]
+
+Plan: [happens(seek_left, t249), happens(approach, t265), happens(pickup, t250), happens(seek_left, t248), happens(approach, t247), happens(putdown, t246)]
+
+seek_left
+
+Enter sen.or event: see(blue)
+
+
+Happened: [see(blue), seek_left, t249]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(blue, b)), t268), before(t249, t268), happens(seek_left, t249)]
+
+Before progression: [loc(green, c), knowcol(c), facing(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(seek_left, t249), happens(initialise(loc(blue, b)), t268)]
+
+After progression: [loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Depth: 3
+
+Depth: 4
+
+Depth: 5
+
+Residue: [before(t327, t319), before(t320, t318), before(t327, t318), before(t327, t320), happens(approach, t327), before(t320, t317), happens(pickup, t320), before(t319, t318), happens(seek_left, t319), before(t318, t317), happens(approach, t318), before(t317, t103), happens(putdown, t317)]
+
+Plan: [happens(approach, t327), happens(pickup, t320), happens(seek_left, t319), happens(approach, t318), happens(putdown, t317)]
+
+approach
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, approach, t327]
+
+Depth: 1
+
+What has happened: [happens(approach, t327)]
+
+Before progression: [loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(approach, t327)]
+
+After progression: [at(b), loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [at(b), loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Depth: 3
+
+Depth: 4
+
+Residue: [before(t346, t344), before(t346, t343), happens(pickup, t346), before(t345, t344), happens(seek_left, t345), before(t344, t343), happens(approach, t344), before(t343, t103), happens(putdown, t343)]
+
+Plan: [happens(pickup, t346), happens(seek_left, t345), happens(approach, t344), happens(putdown, t343)]
+
+pickup
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, pickup, t346]
+
+Depth: 1
+
+What has happened: [happens(approach, t346), happens(pickup, t346)]
+
+Before progression: [at(b), loc(blue, b), knowcol(b), facing(b), loc(green, c), knowcol(c), loc(blue, b), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(approach, t346), happens(pickup, t346)]
+
+After progression: [got(blue), got(blue), at(b), knowcol(b), facing(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [got(blue), got(blue), at(b), knowcol(b), facing(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Depth: 3
+
+Residue: [before(t355, t354), happens(seek_left, t355), before(t354, t353), happens(approach, t354), before(t353, t103), happens(putdown, t353)]
+
+Plan: [happens(seek_left, t355), happens(approach, t354), happens(putdown, t353)]
+
+seek_left
+
+Enter se.sor event: see(red)
+
+
+Happened: [see(red), seek_left, t355]
+
+Depth: 1
+
+What has happened: [happens(initialise(loc(red, a)), t358), before(t355, t358), happens(seek_left, t355)]
+
+Before progression: [got(blue), got(blue), at(b), knowcol(b), facing(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(seek_left, t355), happens(initialise(loc(red, a)), t358)]
+
+After progression: [loc(red, a), knowcol(a), facing(a), got(blue), got(blue), at(b), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [loc(red, a), knowcol(a), facing(a), got(blue), got(blue), at(b), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Depth: 2
+
+Residue: [before(t362, t361), happens(approach, t362), before(t361, t103), happens(putdown, t361)]
+
+Plan: [happens(approach, t362), happens(putdown, t361)]
+
+approach
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, approach, t362]
+
+Depth: 1
+
+What has happened: [happens(approach, t362)]
+
+Before progression: [loc(red, a), knowcol(a), facing(a), got(blue), got(blue), at(b), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(approach, t362)]
+
+After progression: [at(a), loc(red, a), knowcol(a), facing(a), got(blue), got(blue), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [at(a), loc(red, a), knowcol(a), facing(a), got(blue), got(blue), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Residue: [before(t363, t103), happens(putdown, t363)]
+
+Plan: [happens(putdown, t363)]
+
+putdown
+
+Enter sensor event: nothing.
+
+
+Happened: [nothing, putdown, t363]
+
+Depth: 1
+
+What has happened: [happens(approach, t363), happens(putdown, t363)]
+
+Before progression: [at(a), loc(red, a), knowcol(a), facing(a), got(blue), got(blue), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Progressing with: [happens(approach, t363), happens(putdown, t363)]
+
+After progression: [loc(blue, a), loc(blue, a), at(a), loc(red, a), knowcol(a), facing(a), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Goals: [holds(loc(blue, a), t103)]
+
+Database: [loc(blue, a), loc(blue, a), at(a), loc(red, a), knowcol(a), facing(a), knowcol(b), loc(green, c), knowcol(c), knowcol(b), loc(red, a), knowcol(a)]
+
+Depth: 1
+
+Residue: []
+
+No plan for holds(loc(blue, a), t103), moving on to []
+
+T = t103
