@@ -1,4 +1,28 @@
 /*
+	Group members:
+		Peter Coetzee (plc06@doc.ic.ac.uk)
+		Oroma Oyewole (oo306@doc.ic.ac.uk)
+		Stephen Wray (sjw06@doc.ic.ac.uk)
+*/
+
+/*
+	Explaination to Question 2 e).
+
+	Cycle had to be modified so that it would only plan for one goal, carrying out that
+	goal until planning that goal returned a plan of no actions to complete before
+	moving onto the next remaining goal because it planner could not cope with multiple goals.
+	
+	This is likely because the search space grew extremely large and would take a long period
+	of time to find a valid plan.
+
+		cycle([holds(knowcol(a),T), holds(knowcol(b),T),
+			holds(knowcol(c),T), holds(got(blue),T)]).
+
+	Specifies that the robot learns what colour is at all of the positions so that when
+	it wants to pick up the blue column then it will know where that column is located.
+*/
+
+/*
   Code for linearising and executing partially ordered event calculus plans
   that have been produced by the abductive meta-interpreter
 */

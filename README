@@ -1,1 +1,3 @@
-load_files(['Abduction id.txt','Plan execution.txt','Sticks World Planning New.txt']).
+load_files(['Abduction id.txt','Plan execution.txt','Sticks World Planning.txt']).
+
+Submission files: 'Plan execution.txt', 'Sticks World Planning.txt'

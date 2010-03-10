@@ -1,39 +1,49 @@
 /*
-   Sticks World axioms for use with abductive meta-interpreter
-   Planning version - initial situation known, plan abducible
+        Group members:
+                Peter Coetzee (plc06@doc.ic.ac.uk)
+                Oroma Oyewole (oo306@doc.ic.ac.uk)
+                Stephen Wray (sjw06@doc.ic.ac.uk)
 */
-
 
 /* Event calculus axioms */
 
 axiom(holds(F,T2),
-     [happens(A,T1), before(T1,T2),
-     initiates(A,F,T1),
-     not(clipped(T1,F,T2))]).
+	[happens(A,T1), before(T1,T2), initiates(A,F,T1), not(clipped(T1,F,T2))]).
 
-axiom(holds(F,T),[initially(F), not(clipped(0,F,T))]).
+axiom(holds(F,T),
+	[initially(F), not(clipped(0,F,T))]).
 
 axiom(clipped(T1,F,T3),
-     [happens(A,T2),
-     terminates(A,F,T2),
-     before(T1,T2), before(T2,T3)]).
+	[happens(A,T2), terminates(A,F,T2), before(T1,T2), before(T2,T3)]).
 
 
-/* Fluents examples */
-/*
-got(X) - means the same as beforehand - the robot has object X in its gripper
+/* Sensor events */
 
-at(X) - means the robot is at location X
+axiom(happens(see(X),T1),
+	[happens(seek_left,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]).
 
-loc(X,Y) - means object X is at location Y
+axiom(happens(see(X),T1),
+	[happens(seek_right,T1), holds(facing(Y),T2), before(T1,T2), happens(initialise(loc(X,Y)),T2)]).
 
-facing(X) - means the robot is facing location X (note: not object X)
-*/
+axiom(happens(nothing,T),
+	[happens(approach,T)]).
+
+axiom(happens(nothing,T),
+        [happens(pickup,T)]).
+
+axiom(happens(nothing,T),
+        [happens(putdown,T)]).
 
 
 /* Effect axioms */
 
-axiom(initiates(approach,at(X),T),[facing(X)]).
+axiom(initiates(initialise(F),F,T),[]).
+
+axiom(initiates(seek_left,knowcol(Z),T),[holds(facing(Y),T),next_left(Z,Y)]).
+
+axiom(initiates(seek_right,knowcol(Z),T),[holds(facing(Y),T),next_left(Y,Z)]).
+
+axiom(initiates(approach,at(X),T),[holds(facing(X),T)]).
 
 axiom(initiates(seek_left,facing(X),T),[holds(facing(Y),T),next_left(X,Y)]).
 
@@ -49,40 +59,10 @@ axiom(terminates(seek_left,facing(Y),T),[]).
 
 axiom(terminates(seek_right,facing(Y),T),[]).
 
-axiom(terminates(pickup,loc(X,Y),T),[]).
+axiom(terminates(pickup,loc(X,Y),T),[holds(at(Y),T)]).
 
 axiom(terminates(putdown,got(X),T),[]).
 
-/* Old effect axioms */
-/*
-axiom(initiates(forwards,at_edge,T),[]).
-
-axiom(initiates(approach,in_front(X),T),[holds(visible(X),T)]).
-
-axiom(initiates(seek_left,visible(X),T),
-     [holds(visible(Y),T),next_left(X,Y)]).
-
-axiom(initiates(seek_right,visible(X),T),
-     [holds(visible(Y),T),next_left(Y,X)]).
-
-axiom(initiates(pickup,got(X),T),[holds(in_front(X),T)]).
-
-axiom(initiates(putdown,tidy(X),T),[holds(got(X),T),holds(at_edge,T)]).
-
-axiom(terminates(forwards,in_front(X),T),[]).
-
-axiom(terminates(approach,at_edge,T),[]).
-
-axiom(terminates(seek_right,visible(X),T),[]).
-
-axiom(terminates(seek_left,visible(X),T),[]).
-
-axiom(terminates(pickup,visible(X),T),[]).
-
-axiom(terminates(pickup,in_front(X),T),[]).
-
-axiom(terminates(putdown,got(X),T),[]).
-*/
 
 /* Initial situation */
 
@@ -94,37 +74,18 @@ axiom(next_left(c,a),[]).
 
 axiom(initially(facing(b)),[]).
 
-axiom(initially(loc(blue,a)),[]).
-
-axiom(initially(loc(green,b)),[]).
-
-axiom(initially(loc(red,c)),[]).
-
-/* Old initial situation */
-/*
-axiom(next_left(blue,green),[]).
-
-axiom(next_left(green,red),[]).
-
-axiom(next_left(red,blue),[]).
-
-axiom(initially(visible(green)),[]).
-*/
-
 axiom(eq(X,X),[]).
 
 
 /* Abduction policy */
 
-abducible(happens(A,T)) :- skolemise(T).
-abducible(before(T1,T2)) :-
-     skolemise(T1), skolemise(T2).
+abducible(pln,happens(approach,T)) :- skolemise(T).
+abducible(pln,happens(seek_left,T)) :- skolemise(T).
+abducible(pln,happens(seek_right,T)) :- skolemise(T).
+abducible(pln,happens(pickup,T)) :- skolemise(T).
+abducible(pln,happens(putdown,T)) :- skolemise(T).
 
+abducible(_,before(T1,T2)) :-
+	skolemise(T1), skolemise(T2).
 
-/*
-   Sample queries:
-   abdemo([holds(visible(blue),T)],[],R,[],N).
-   abdemo([holds(in_front(blue),T)],[],R,[],N).
-   abdemo([holds(tidy(blue),T)],[],R,[],N).
-*/
-
+abducible(pcv,happens(A,T)) :- skolemise(T).
